@@ -1,0 +1,49 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    US_Search
+{% endblock %}
+
+{% block logout %}
+    {% if login %}
+        <a href = "{{url_for('log_out')}}">Log out</a>
+    {% else %}
+        <a href = "{{url_for('registered_users')}}">Log in</a>
+    {% endif %}
+{% endblock %}
+
+{% block header %}
+    Welcome to US_Search!
+{% endblock %}
+
+{% block body %}
+    {% if login %}
+        <h2>Thank you for visiting us again!</h2><br>
+        <a href="{{ url_for('locations_initial') }}" class="btn btn-info" role="button">Go to search</a>
+
+    {% else %}
+        <h2>Register now!</h2>
+        <h4>{{ message }}</h4>
+        <form action = "{{ url_for('register')}}" method = "post">
+            <div class = "form-group">
+                <label for="name">Full name:</label>
+                <input class="form-control" name = "name" placeholder = "Full name" id = "name">
+            </div>
+            <div class = "form-group">
+                <label for="usr">Username:</label>
+                <input class="form-control" name="username" placeholder="Username" id = "usr">
+            </div>
+            <div class = "form-group">
+                <label for="pwd">Password:</label>
+                <input class="form-control" type = "password" name="password" placeholder="Password" id = "pwd">
+            </div>
+            <div class = "form-group">
+                <button class = "btn btn-primary">Register</button>
+            </div>
+        </form>
+
+        <h1>Or,</h1>
+        <a href="{{ url_for('registered_users') }}" class="btn btn-info" role="button">Login</a>
+        <a href="{{ url_for('locations_initial') }}" class="btn btn-info" role="button">Proceed without account</a>
+    {% endif %}
+{% endblock %}

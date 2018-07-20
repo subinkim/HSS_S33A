@@ -1,0 +1,85 @@
+/* website css */
+html {
+  padding-left: 20px;
+  padding-right: 20px; }
+
+/* title and footer css */
+h1, .container-fluid {
+  background-color: #a51c30;
+  text-align: center;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  margin: 0px;
+  color: white; }
+
+header > img {
+  width: 100px;
+  margin: 0px; }
+
+.container-fluid {
+  font-family: 'Lato', sans-serif;
+  text-align: center; }
+
+#footer {
+  font-size: 15px;
+  margin-top: 40%; }
+
+/* Navigation bar css */
+#nav a, #nav a:link, #nav a:visited {
+  font-size: 20px;
+  text-decoration: none; }
+
+#nav a, #nav a:link {
+  color: #fff; }
+
+#nav a:visited {
+  color: #7a7a7a; }
+
+#nav a:hover {
+  text-decoration: underline;
+  color: black; }
+
+#selected {
+  font-weight: bold; }
+
+/* css: about.html */
+.main-body {
+  font-family: 'Muli', sans-serif; }
+  .main-body table a {
+    text-decoration: none; }
+
+/* css: lecture.html */
+.body-text {
+  margin-top: 3%;
+  text-decoration: none; }
+  .body-text a {
+    color: #a51c30; }
+
+/* css: interest.html */
+.boxes {
+  display: flex;
+  flex-wrap: flex;
+  font-family: 'Muli'; }
+
+#cs, #soccer, #maths, #baseball {
+  font-size: 18px;
+  margin: 20px;
+  padding: 20px;
+  width: 30%; }
+
+#cs {
+  background-color: #fcfa79; }
+
+#soccer {
+  background-color: #6892d6;
+  color: white; }
+
+#maths {
+  background-color: #fc846f;
+  color: black; }
+
+#baseball {
+  background-color: #29a03f;
+  color: white; }
+
+/*# sourceMappingURL=main.css.map */

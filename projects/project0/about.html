@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset = "utf-8">
+        <meta name = "viewport" content = "width = device-width, initial scale = 1.0">
+
+        <!--Stylesheets-->
+        <link rel = "stylesheet" type = "text/css" href = "main.css">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+        <link href="https://fonts.googleapis.com/css?family=Lato|Markazi+Text|Muli" rel="stylesheet">
+
+        <title>About Subin</title>
+
+        <style>
+            @media print
+            {
+                .screen-only
+                {
+                    display: none;
+                }
+            }
+
+            @media (min-width: 644px)
+            {
+                h1::after
+                {
+                    content: "Welcome to Subin's web page!";
+                    color: #fff;
+                    font-family: 'Markazi Text', serif;
+                    font-size: 60px;
+                }
+            }
+
+            @media (max-width: 643px)
+            {
+                h1::after
+                {
+                    content: "Welcome:)";
+                    color: white;
+                    font-family: 'Markazi Text', serif;
+                }
+
+                h3::before
+                {
+                    content: "Rachael's webpage";
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <header>
+            <img src = "image/harvard.png">
+        </header>
+        <h1></h1>
+        <h3></h3>
+
+        <div class = "container-fluid" id = "nav">
+            <div class = "row">
+                <div class = "col-lg-3 col-sm-6"><a href = "index.html">&#8962; HOME</a></div>
+                <div class = "col-lg-3 col-sm-6"><a href = "about.html" id = "selected">About me</a></div>
+                <div class = "col-lg-3 col-sm-6"><a href = "interest.html">Interests</a></div>
+                <div class = "col-lg-3 col-sm-6"><a href = "lecture.html"> Lectures</a></div>
+            </div>
+        </div>
+
+        <div class = "main-body">
+            <br>
+            <h5>About me</h5>
+            <table class = "table">
+                <tr>
+                    <td><a href = "#hometown">My hometown</a></td>
+                    <td><a href = "#school">My school</a></td>
+                    <td><a href = "#dreams">My dreams</a></td>
+                </tr>
+            </table>
+
+            <p id = "hometown">
+                <strong>My Hometown</strong>
+                <ul>
+                    <li>As I have briefly mentioned in the home page of the website, I am from South Korea,
+                        which is part of East Asia, between Japan and China. Among hundreds of cities in Korea, I was born and raised
+                         on an island called "Jeju", which is the island on the south of the peninsula. </li>
+                    <li>The island retains the original beauty of its nature, including the blue, shining sea that encompasses the island
+                        , and Mt. Halla that stands audaciously at the heart of Jeju. It is also known for the small mountains which
+                        were created when Mt. Halla, which was an active volcano in the past, erupted. </li>
+                    <li>0.7 million people reside on this island with 1850km<sup>2</sup> of area, including 20 000 people of foreign nationality.</li>
+                    <li>The main industries on the island are agriculture and tourism. Hence, it is a boring place for young people like me,
+                    who prefer visiting theme parks than walking through the forests.</li>
+                    <li>The island carries huge values in science. Due to its nature of being a volcanic island, its topographical features
+                    are an important source of study. The island itself with its lava tubes is UNESCO world heritage site, and the UNESCO
+                    describes them as follows: <em>"The site, of outstanding aesthetic beauty, also bears testimony to the history of the planet, its features and processes."</em></li>
+                </ul>
+            </p> <br>
+
+            <p id = "school">
+                <strong>My Schools</strong><br><br>
+                So far I have attended 3 different schools (as I have transferred once) and I will be attending a new school this fall in America.
+                 But among all those schools that I have attended or that I will attend, I would like to introduce the third one, which I have attended until this June.
+                Deciding to attend that school was one of the best choices I have made in my life, since it set me a path to follow.
+                <br> When I first entered the school as a new 7th grader, computer science was a mandatory course for me. And that was when I first experienced coding.
+                We learnt Python and made a game with it, which has been engraved in myself as a pleasant memory. I felt a strong attachment to coding and programming, hence I decided to study more about it.
+                Now I can program in several languages, and am seriously thinking about my future with computer science. And I really want to thank my school, which is now my 'previous' school, for being such a wonderful place,
+                 where I could develop my dreams and discover my true self.
+            </p> <br>
+
+            <p id = "dreams">
+                <strong>My dreams</strong><br><br>
+                I want to be a computer scientist in the future. I will not write in too much detail, because you will find out what my dreams and aspirations are, later in the future.
+            </p>
+
+
+        </div>
+
+        <div class = "container-fluid" id = "footer">
+            <div class = "row">
+                <div class = "col-md-3 col-sm-6">Dorm: Straus Hall</div>
+                <div class = "col-md-3 col-sm-6">Site Language: English</div>
+                <div class = "col-md-3 col-sm-6">S-33A Web Programming</div>
+                <div class = "col-md-3 col-sm-6">Project 0</div>
+            </div>
+        </div>
+    </body>
+</html>

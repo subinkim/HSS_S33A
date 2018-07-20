@@ -1,0 +1,72 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    {{location.city}}
+{% endblock %}
+
+{% block logout %}
+    {% if login %}
+        <a href = "{{url_for('log_out')}}">Log out   </a>
+        <a href = "{{url_for('locations_initial')}}" style ="padding-left:10px">Search</a>
+    {% else %}
+        <a href = "{{url_for('registered_users')}}">Log in</a>
+    {% endif %}
+{% endblock %}
+
+{% block header %}
+    More about {{location.city.lower().title()}}
+{% endblock %}
+
+{% block body %}
+    <div class = "info">
+        <p>
+            City: {{location.city.lower().title()}}
+            <br>State: {{ location.state}}
+            <br> Zipcode: {{location.zipcode}}
+            <br> Latitude: {{location.latitude}}
+            <br> Longitude: {{location.longitude}}
+            <br> Population: {{location.population}}
+        </p>
+
+        <div class = "weather-report">
+            <p>
+                Time of the report: {{ weather["time"]}} <br>
+                Textual summary: {{ weather["summary"]}} <br>
+                Temperature: {{weather["temperature"]}} <br>
+                Dew point: {{weather["dewPoint"]}} <br>
+                Humidity: {{weather["humidity"] * 100}} % <br>
+            </p>
+        </div>
+    </div>
+
+    <div class = "extra">
+        <form action = "{{ url_for('comment', zipcode=location.zipcode) }}", method = "post">
+            <div class="form-group">
+              <label for="comment">Comment:</label>
+              <textarea class="form-control" rows="5" name="comment"></textarea>
+              <button class="btn btn-primary">Submit</button>
+            </div>
+        </form>
+
+        <div class = "comment-display">
+            <h4>Comments</h4>
+                {% for user in location.comment %}
+                    <ul>
+                        <li>{{ user }}</li>
+                    </ul>
+                {% endfor %}
+
+        </div>
+
+        <div class = "check_ins">
+            <h4>Check-in!</h4>
+            <form action = "{{url_for('check_in', zipcode=location.zipcode)}}", method = "post">
+                <div class = "form-group">
+                    <button class="btn btn-primary">Check-In! {{location.check_in}}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+{% endblock %}

@@ -1,0 +1,116 @@
+$crimson: #a51c30;
+
+/* website css */
+html{
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+/* title and footer css */
+h1, .container-fluid {
+    background-color: $crimson;
+    text-align: center;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    margin: 0px;
+    color: white;
+}
+
+header > img{
+    width: 100px;
+    margin:0px;
+}
+
+.container-fluid {
+    font-family: 'Lato', sans-serif;
+    text-align: center;
+}
+
+#footer{
+    font-size: 15px;
+    margin-top:40%;
+}
+
+/* Navigation bar css */
+%navigation{
+    font-size: 20px;
+    text-decoration: none;
+}
+
+#nav a, #nav a:link
+{
+    @extend %navigation;
+    color: #fff;
+}
+
+#nav a:visited{
+    @extend %navigation;
+    color: #7a7a7a;
+}
+
+#nav a:hover {
+    text-decoration: underline;
+    color: black;
+}
+
+#selected {
+    font-weight: bold;
+}
+
+/* css: about.html */
+.main-body {
+
+    font-family: 'Muli', sans-serif;
+
+    table a{
+        text-decoration: none;
+    }
+
+}
+
+/* css: lecture.html */
+.body-text {
+    margin-top: 3%;
+    text-decoration: none;
+
+    a {
+        color: $crimson;
+    }
+}
+
+/* css: interest.html */
+.boxes {
+    display: flex;
+    flex-wrap: flex;
+    font-family: 'Muli';
+}
+
+%box {
+    font-size: 18px;
+    margin: 20px;
+    padding: 20px;
+    width: 30%;
+}
+
+#cs{
+    @extend %box;
+    background-color: #fcfa79;
+}
+
+#soccer{
+    @extend %box;
+    background-color: #6892d6;
+    color: white;
+}
+
+#maths{
+    @extend %box;
+    background-color: #fc846f;
+    color: black;
+}
+
+#baseball {
+    @extend %box;
+    background-color: #29a03f;
+    color: white;
+}
