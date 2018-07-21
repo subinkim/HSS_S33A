@@ -15,16 +15,25 @@
             .container{
                 width: 33%;
                 float: left;
+                margin-bottom: 20px;
             }
             .list-group{
                 height: 10%;
                 overflow: scroll;
             }
+            .list-item{
+                color: lightblue;
+                text-decoration: underline;
+            }
             .msg{
+                margin-top: 5px;
                 width: 60%;
                 background-color: #87CEFA;
                 font-family: 'Gaegu', cursive;
+                border-radius: 25px;
+                padding-left: 25px;
             }
+
         </style>
 
         <!-- JavaScript scripts -->
@@ -32,22 +41,21 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.11/handlebars.min.js"></script>
         <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
 
+        <!-- Layout of this template tags is deliberately done in this way -->
         <script id = "channel" type="text/x-handlebars-template">
-            <li><a href= "" class = "list-item">
-                {% raw -%}
-                    {{ contents }}
-                {%- endraw %}
-            </a></li>
+            <li class = "list-item" onclick="loadMessage(this.innerHTML)">{% raw -%}{{ contents }}{%- endraw %}</li>
         </script>
 
         <script id = "message" type="text/x-handlebars-template">
             <div class = "msg">
                 {% raw -%}
+                    <strong> User "{{ username }}" said:</strong><br>
                     {{ contents }}
                 {%- endraw %}
             </div>
         </script>
 
+        <!-- JavaScript script that uses Handlebars templates -->
         <script>
             const channel_template = Handlebars.compile(document.querySelector('#channel').innerHTML);
             const message_template = Handlebars.compile(document.querySelector('#message').innerHTML);
@@ -57,15 +65,23 @@
                 for (var i = 0; i < list.length; i++) {
                     const item = channel_template({'contents': list[i]});
                     document.querySelector('.list-group').innerHTML += item;
-                };
+                }
             }
 
             //Displays the message of the selected channel
-            function showMsg(list){
-                for (var i = 0; i < list.length; i++) {
-                    const item = message_template({'contents': list[i]});
-                    document.querySelector('.messages').innerHTML += item;
-                };
+            function showMsg(dict){
+                var keys = Object.keys(dict);
+                for (var i = 0; i < keys.length; i++) {
+                    const username = keys[i];
+                    const user = Object.keys(dict[username]);
+                    for (var j = 0; j < user.length; j++){
+                        const msg = user[j];
+                        const timestamp = dict[username][msg];
+                        const message = user[j] + " @ "  + dict[username][msg];
+                        const item = message_template({'username': username, 'contents': message});
+                        document.querySelector('.messages').innerHTML += item;
+                    }
+                }
             }
         </script>
 
@@ -124,5 +140,10 @@
         <div class = "messages">
             <h4 id = "channel_info"></h4>
         </div>
+
+        <!-- send messages -->
+        <div class = "send">
+        </div>
+
     </body>
 </html>

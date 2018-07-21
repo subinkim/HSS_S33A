@@ -48,20 +48,18 @@ function load() {
         return false;
     });
 
-    //Channel selected - getting messages in the channel
-    document.querySelectorAll('.list-item').forEach(select => {
-        select.onclick = () => {
-            var link = select.textContent;
-            socket.emit('getMessages', {'selected': link});
-        };
-    });
-
     //When messages are loaded for the selected channel
     socket.on('messageLoaded', data => {
-        console.log(data);
-        list = data[0];
+        dict = data[0];
         name = data[1];
-        showMsg(list);
+        showMsg(dict);
         document.querySelector('#channel_info').innerHTML = "Current channel: " + name;
     });
+}
+
+//Gets the name of the selected channel and calls the application.py function
+function loadMessage(chn){
+    var channel = chn;
+    var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
+    socket.emit('getMessages', {"selected": channel});
 }

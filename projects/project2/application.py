@@ -8,7 +8,12 @@ app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 socketio = SocketIO(app)
 
 ## messages in each channel
-channel_list = {"General": ["Hello! Welcome to quick chat!", "Please enjoy our service!"]}
+channel_list = {
+    "General": {"Quick Chat": {"Hello! Welcome to quick chat!": "0",
+                                "Please enjoy our service!": "0"
+                }
+    }
+}
 
 ## list of channels
 channels = ["General"]
@@ -45,8 +50,8 @@ def check(newItem, list):
     return validity
 
 ## Getting messages from channel_list dictionary
-@socketio.on('getMessages')
+@socketio.on("getMessages")
 def getMessages(data):
     selection = data["selected"]
-    message = channel_list["selection"]
+    message = channel_list[selection]
     emit("messageLoaded", [message, selection], broadcast=True)
