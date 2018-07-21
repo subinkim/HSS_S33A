@@ -52,9 +52,7 @@ function load() {
     document.querySelectorAll('.list-item').forEach(select => {
         select.onclick = () => {
             var link = select.textContent;
-            console.log(link);
             socket.emit('getMessages', {'selected': link});
-            return false;
         };
     });
 

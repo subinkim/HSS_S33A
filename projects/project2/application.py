@@ -8,10 +8,10 @@ app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 socketio = SocketIO(app)
 
 ## messages in each channel
-channel_list = {"general": ["Hello! Welcome to quick chat!", "Please enjoy our service!"]}
+channel_list = {"General": ["Hello! Welcome to quick chat!", "Please enjoy our service!"]}
 
 ## list of channels
-channels = ["general"]
+channels = ["General"]
 
 ##Index
 @app.route("/")
@@ -27,13 +27,13 @@ def channel():
 ## Creating a new channel and adding it to the channel_list
 @socketio.on("create")
 def create(data):
-    name = data["name"]
-    name = name.lower()
-    if (check(name, channels) == False):
+    channelName = data["name"]
+    channelName = channelName.title()
+    if (check(channelName, channels) == False):
         emit("created", ["false"], broadcast=True)
     else:
-        channels.append(name)
-        channel_list[name] = []
+        channels.append(channelName)
+        channel_list[channelName] = []
         emit("created", channels, broadcast=True)
 
 ##Check function - checks if the item already exists in the list
