@@ -1,9 +1,128 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <meta charset="utf-8">
 
+        <!-- stylesheet -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css" integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B" crossorigin="anonymous">
+        <link href="https://fonts.googleapis.com/css?family=Gaegu" rel="stylesheet">
+
+        <style>
+            html{
+                margin-left: 5%;
+                margin-right: 5%;
+            }
+            .container{
+                width: 33%;
+                float: left;
+            }
+            .list-group{
+                height: 10%;
+                overflow: scroll;
+            }
+            .msg{
+                width: 60%;
+                background-color: #87CEFA;
+                font-family: 'Gaegu', cursive;
+            }
+        </style>
+
+        <!-- JavaScript scripts -->
+        <script src="{{ url_for('static', filename='index.js') }}"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.11/handlebars.min.js"></script>
+        <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
+
+        <script id = "channel" type="text/x-handlebars-template">
+            <li><a href= "" class = "list-item">
+                {% raw -%}
+                    {{ contents }}
+                {%- endraw %}
+            </a></li>
+        </script>
+
+        <script id = "message" type="text/x-handlebars-template">
+            <div class = "msg">
+                {% raw -%}
+                    {{ contents }}
+                {%- endraw %}
+            </div>
+        </script>
+
+        <script>
+            const channel_template = Handlebars.compile(document.querySelector('#channel').innerHTML);
+            const message_template = Handlebars.compile(document.querySelector('#message').innerHTML);
+
+            //Displays the list of channels on webpage
+            function addList(list){
+                for (var i = 0; i < list.length; i++) {
+                    const item = channel_template({'contents': list[i]});
+                    document.querySelector('.list-group').innerHTML += item;
+                };
+            }
+
+            //Displays the message of the selected channel
+            function showMsg(list){
+                for (var i = 0; i < list.length; i++) {
+                    const item = message_template({'contents': list[i]});
+                    document.querySelector('.messages').innerHTML += item;
+                };
+            }
+        </script>
+
+        <!-- ADDITIONAL FEATURE: changing title when chat channel changes -->
+        <title>Quick Chat</title>
     </head>
     <body>
+        <div class = "jumbotron">
+            <h1 class = "display-2">Quick Chat</h1>
+        </div>
 
+        <!-- display user info -->
+        <div class = "container" id = "info">
+            <h4>Your info</h4>
+            <p>Username:</p>
+            <p id = "username"></p>
+            <!-- ADDITIONAL FEATURE:
+            display names of the channels the user created
+            <p>Channels you have created:
+            <p id = "created"></p> -->
+        </div>
+        <!-- ADDITIONAL FEATURE OF THE WEBSITE
+        list of channels the user has joined
+        <div class = "container">
+            <h4>Channels you've joined</h4>
+            {% for channel in channels %}
+            <a href="" id = "{{ channel.id }}">{{ channel.name }}</a>
+            {% endfor %}
+        </div>
+        -->
+
+        <!-- list of channels created by all the users
+        ADDITIONAL FEATURE: list of channels available for joining -->
+        <div class = "container">
+            <h4>Join other channels</h4>
+            <ul class="list-group">
+                <!-- Channel names displayed -->
+            </ul>
+        </div>
+
+        <!-- create channel -->
+        <div class = "container">
+            <h4>Create a channel</h4>
+            <form>
+                <div class = "form-group">
+                    <label for="name">Channel Name:</label>
+                    <input class="form-control" id = "name" autocomplete="off" placeholder="Channel Name" type="text" />
+                </div>
+                <div class = "form-group" id = "create">
+                    <button class="btn btn-primary">Create Channel</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- display messages in the selected channel -->
+        <div class = "messages">
+            <h4 id = "channel_info"></h4>
+        </div>
     </body>
 </html>

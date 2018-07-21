@@ -1,15 +1,52 @@
 import os
 
-from flask import Flask
+from flask import Flask, jsonify, render_template, request
 from flask_socketio import SocketIO, emit
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 socketio = SocketIO(app)
 
-# list of all channels
-channel_list = ['general']
+## messages in each channel
+channel_list = {"general": ["Hello! Welcome to quick chat!", "Please enjoy our service!"]}
 
+## list of channels
+channels = ["general"]
+
+##Index
 @app.route("/")
 def index():
-    return "Project 2: TODO"
+    return render_template("index.html")
+    ##'selected' set to the last channel user visited
+
+## Loading the list of channels
+@socketio.on("channel")
+def channel():
+    emit("done", channels, broadcast=True)
+
+## Creating a new channel and adding it to the channel_list
+@socketio.on("create")
+def create(data):
+    name = data["name"]
+    name = name.lower()
+    if (check(name, channels) == False):
+        emit("created", ["false"], broadcast=True)
+    else:
+        channels.append(name)
+        channel_list[name] = []
+        emit("created", channels, broadcast=True)
+
+##Check function - checks if the item already exists in the list
+def check(newItem, list):
+    validity = True
+    for item in list:
+        if item == newItem:
+            validity = False
+    return validity
+
+## Getting messages from channel_list dictionary
+@socketio.on('getMessages')
+def getMessages(data):
+    selection = data["selected"]
+    message = channel_list["selection"]
+    emit("messageLoaded", [message, selection], broadcast=True)
