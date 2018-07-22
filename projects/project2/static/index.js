@@ -4,7 +4,7 @@ function load() {
     //localStorage.clear();
     //Open new socket and request
     var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
-    const request = new XMLHttpRequest();
+    localStorage.setItem("changed", "true");
 
     socket.on('connect', () => {
         //Asks for username if there's not one stored in local storage
@@ -23,17 +23,28 @@ function load() {
     //Gets the list of channels
     socket.on('done', response => {
         addList(response);
+        var channel = "";
+        if (!localStorage.getItem("lastChannel")){
+            localStorage.setItem("lastChannel", "General");
+            channel = "General";
+        }
+        else{
+            channel = localStorage.getItem("lastChannel");
+        }
+        document.querySelector('title').innerHTML = 'Quick Chat: ' + channel;
+        loadMessage(channel);
+        return false;
     });
 
     //When button is clicked, it triggers create method in application.py via socket.emit
-    var submit = document.querySelector('#create');
-    submit.addEventListener('click', function() {
+    var create = document.querySelector('#create');
+    create.addEventListener('click', function() {
         var name = "";
         name = document.querySelector('.form-control').value;
         if (name === "")
             alert("Enter channel name!");
         else
-            socket.emit('create', {'name': name});
+            socket.emit('create', {'name': name, 'user': localStorage.getItem("displayName")});
         return false;
     });
 
@@ -50,16 +61,73 @@ function load() {
 
     //When messages are loaded for the selected channel
     socket.on('messageLoaded', data => {
-        dict = data[0];
+        list = data[0];
         name = data[1];
-        showMsg(dict);
-        document.querySelector('#channel_info').innerHTML = "Current channel: " + name;
+        showMsg(list, name);
+        //sets titles
+        document.querySelector('title').innerHTML = 'Quick Chat: ' + name;
+        document.querySelector('#channel_info').innerHTML = 'Quick chat @ ' + name;
+        //change values in local storage
+        localStorage.setItem("lastChannel", name);
+        localStorage.setItem("changed","false");
     });
+
+    //Responds to select function --> changes the styles
+    document.querySelector('#change-colour').onchange = function (){
+        var message = document.querySelectorAll('.msg');
+        for (var i = 0; i < message.length; i++){
+            message[i].style.color = this.value;
+        }
+    };
+    document.querySelector('#change-font-family').onchange = function(){
+        var message = document.querySelectorAll('.msg');
+        for (var i = 0; i < message.length; i++){
+            message[i].style.fontFamily = this.value;
+        }
+    };
+    document.querySelector('#change-bg-colour').onchange = function(){
+        var message = document.querySelectorAll('.msg');
+        for (var i = 0; i < message.length; i++){
+            message[i].style.backgroundColor = this.value;
+        }
+    };
 }
 
 //Gets the name of the selected channel and calls the application.py function
 function loadMessage(chn){
-    var channel = chn;
-    var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
-    socket.emit('getMessages', {"selected": channel});
+    if (localStorage.getItem("changed") === "true" || chn !== localStorage.getItem("lastChannel")){
+        var channel = chn;
+        var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
+        socket.emit('getMessages', {"selected": channel});
+    }
+}
+
+//Submitting new message_template
+function submit() {
+    const request = new XMLHttpRequest();
+    //getting message + essential info from index.html
+    var msg = "";
+    msg = document.querySelector('#newMsg').value;
+    var displayname = localStorage.getItem("displayName");
+    var channel = localStorage.getItem("lastChannel");
+
+    //checking if the user entered the message
+    if (msg === "")
+        alert("Enter message!");
+    else {
+        localStorage.getItem("changed") = true;
+        //displaying the message
+        request.open('POST', '/send');
+        request.onload = () => {
+            const response = JSON.parse(request.responseText);
+            showMsg(response, channel);
+        };
+        const data = new FormData();
+        data.append('msg', msg);
+        data.append('displayname', displayname);
+        data.append('channel', channel);
+
+        request.send(data);
+    }
+    return false;
 }

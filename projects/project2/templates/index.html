@@ -5,36 +5,8 @@
 
         <!-- stylesheet -->
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css" integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B" crossorigin="anonymous">
-        <link href="https://fonts.googleapis.com/css?family=Gaegu" rel="stylesheet">
-
-        <style>
-            html{
-                margin-left: 5%;
-                margin-right: 5%;
-            }
-            .container{
-                width: 33%;
-                float: left;
-                margin-bottom: 20px;
-            }
-            .list-group{
-                height: 10%;
-                overflow: scroll;
-            }
-            .list-item{
-                color: lightblue;
-                text-decoration: underline;
-            }
-            .msg{
-                margin-top: 5px;
-                width: 60%;
-                background-color: #87CEFA;
-                font-family: 'Gaegu', cursive;
-                border-radius: 25px;
-                padding-left: 25px;
-            }
-
-        </style>
+        <link href="https://fonts.googleapis.com/css?family=Playfair+Display|Raleway|Gaegu|Roboto+Slab|Slabo+27px" rel="stylesheet">
+        <link rel="stylesheet" href="static/main.css">
 
         <!-- JavaScript scripts -->
         <script src="{{ url_for('static', filename='index.js') }}"></script>
@@ -69,24 +41,24 @@
             }
 
             //Displays the message of the selected channel
-            function showMsg(dict){
-                var keys = Object.keys(dict);
-                for (var i = 0; i < keys.length; i++) {
-                    const username = keys[i];
-                    const user = Object.keys(dict[username]);
-                    for (var j = 0; j < user.length; j++){
-                        const msg = user[j];
-                        const timestamp = dict[username][msg];
-                        const message = user[j] + " @ "  + dict[username][msg];
-                        const item = message_template({'username': username, 'contents': message});
-                        document.querySelector('.messages').innerHTML += item;
-                    }
+            function showMsg(list, chn){
+                //Check if channel is new or not
+                if (chn !== localStorage.getItem("lastChannel")){
+                    document.querySelector('.message_list').innerHTML = "";
+                }
+                //Add messages to the message list
+                for (var i = 0; i < list.length; i++) {
+                    const username = list[i][0];
+                    const message = list[i][1];
+                    const timestamp = list[i][2];
+                    msg = message + ", @ " + timestamp;
+                    const item = message_template({'username': username, 'contents': message});
+                    document.querySelector('.message_list').innerHTML += item;
                 }
             }
         </script>
 
-        <!-- ADDITIONAL FEATURE: changing title when chat channel changes -->
-        <title>Quick Chat</title>
+        <title><!-- Displays the channel you are in --></title>
     </head>
     <body>
         <div class = "jumbotron">
@@ -103,18 +75,8 @@
             <p>Channels you have created:
             <p id = "created"></p> -->
         </div>
-        <!-- ADDITIONAL FEATURE OF THE WEBSITE
-        list of channels the user has joined
-        <div class = "container">
-            <h4>Channels you've joined</h4>
-            {% for channel in channels %}
-            <a href="" id = "{{ channel.id }}">{{ channel.name }}</a>
-            {% endfor %}
-        </div>
-        -->
 
-        <!-- list of channels created by all the users
-        ADDITIONAL FEATURE: list of channels available for joining -->
+        <!-- list of channels created by all the users-->
         <div class = "container">
             <h4>Join other channels</h4>
             <ul class="list-group">
@@ -136,14 +98,55 @@
             </form>
         </div>
 
+        <!-- user settings -->
+        <div class = "container">
+            <h4>User settings</h4>
+            <p>Change message font colour</p>
+            <select id = "change-colour">
+                <option value = "black" selected>Black</option>
+                <option value = "white">White</option>
+                <option value = "#A51C30">Harvard Crimson</option>
+                <option value = "blue">Blue</option>
+                <option value = "green">Green</option>
+                <option value = "red">Red</option>
+            </select>
+
+            <p>Change text box colour</p>
+            <select id = "change-bg-colour">
+                <option value = "black">Black</option>
+                <option value = "white">White</option>
+                <option value = "#A51C30">Harvard Crimson</option>
+                <option value = "#87CEFA" selected>Blue</option>
+                <option value = "green">Green</option>
+                <option value = "red">Red</option>
+            </select>
+
+            <p> Change message font family</p>
+            <select id = "change-font-family">
+                <option value = "Helvetica Neue" selected>Helvetica Neue</option>
+                <option value = "Gaegu">Gaegu</option>
+                <option value = "Playfair Display">Playfair Display</option>
+                <option value = "Roboto Slab">Roboto Slab</option>
+                <option value = "Raleway">Raleway</option>
+                <option value = "Slabo 27px">Slabo 27px</option>
+            </select>
+        </div>
+
         <!-- display messages in the selected channel -->
         <div class = "messages">
-            <h4 id = "channel_info"></h4>
+            <h4 id = "channel_info">Current channel: </h4>
+            <div class = "message_list">
+            </div>
         </div>
 
         <!-- send messages -->
-        <div class = "send">
-        </div>
-
+        <form class = "send">
+            <div class = "form-group">
+                <textarea class = "form-control" id = "newMsg" autocomplete="off" placeholder="Enter new message" type="text"></textarea>
+            </div>
+            <div class="form-group">
+                <button class = "btn btn-primary float-right" onclick="submit()">Send</button>
+            </div>
+        </form>
     </body>
 </html>
