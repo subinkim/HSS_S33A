@@ -72,6 +72,31 @@ function load() {
         localStorage.setItem("changed","false");
     });
 
+    var submit = document.querySelector('#submit');
+    submit.addEventListener('click', function () {
+        var msg = "";
+        msg = document.querySelector('textarea').value;
+        var displayname = document.querySelector('#username').innerHTML;
+        var channel = localStorage.getItem("lastChannel");
+
+        //checking if the user entered the message
+        if (msg === ""){
+            alert("Enter message!");
+            return false;
+        }
+        else {
+            //displaying the message
+            socket.emit('submit message', {"msg": msg, "displayname": displayname, "channel": channel});
+        }
+    });
+
+    //When new message is successfully submitted
+    socket.on('submission complete', data => {
+        list = data[0];
+        chn = data[1];
+        showMsg(list, chn);
+    });
+
     //Responds to select function --> changes the styles
     document.querySelector('#change-colour').onchange = function (){
         var message = document.querySelectorAll('.msg');
@@ -100,34 +125,4 @@ function loadMessage(chn){
         var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
         socket.emit('getMessages', {"selected": channel});
     }
-}
-
-//Submitting new message_template
-function submit() {
-    const request = new XMLHttpRequest();
-    //getting message + essential info from index.html
-    var msg = "";
-    msg = document.querySelector('#newMsg').value;
-    var displayname = localStorage.getItem("displayName");
-    var channel = localStorage.getItem("lastChannel");
-
-    //checking if the user entered the message
-    if (msg === "")
-        alert("Enter message!");
-    else {
-        localStorage.getItem("changed") = true;
-        //displaying the message
-        request.open('POST', '/send');
-        request.onload = () => {
-            const response = JSON.parse(request.responseText);
-            showMsg(response, channel);
-        };
-        const data = new FormData();
-        data.append('msg', msg);
-        data.append('displayname', displayname);
-        data.append('channel', channel);
-
-        request.send(data);
-    }
-    return false;
 }

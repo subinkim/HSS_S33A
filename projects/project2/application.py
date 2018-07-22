@@ -33,7 +33,7 @@ def channel():
 @socketio.on("create")
 def create(data):
     channelName = data["name"]
-    displayName = data[""]
+    displayName = data["user"]
     channelName = channelName.title()
     if (check(channelName, list(channels.keys())) == False):
         emit("created", ["false"], broadcast=True)
@@ -58,16 +58,15 @@ def getMessages(data):
     emit("messageLoaded", [message, selection], broadcast=True)
 
 ## Adding new messages to storage
-@app.route("/send", methods=["POST"])
-def send():
-    msg = str(request.form.get("msg"))
-    displayname = str(request.form.get("displayname"))
-    channel = str(request.form.get("channel"))
+@socketio.on('submit message')
+def submit(data):
+    msg = data["msg"]
+    displayname = data["displayname"]
+    channel = data["channel"]
     time = datetime.datetime.today().strftime('%m/%d/%Y %H:%M')
-    ## If number of stored messages is 100, then it deletes the first item,
-    ## in order to store the new item
-    if channel_list[channel].length() > 100:
-        del channel_list[channel][0]
-    newArray = [displayname,msg,time]
+    ## If number of stored messages is 100, then it deletes the first item to store the new item
+    if len(channel_list[channel]) >= 100:
+        channel_list[channel].pop(0)
+    newArray = [displayname, msg, time]
     channel_list[channel].append(newArray)
-    return jsonify(newArray)
+    emit('submission complete',[newArray, channel], broadcast=True)
