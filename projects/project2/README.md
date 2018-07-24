@@ -1,6 +1,6 @@
 # Project 2
 
-Web Programming with Python and JavaScript
+S-33A: Web Programming with Python and JavaScript
 
 #1 Display Name prompt
 When you open the webpage, it prompts you to enter a display name unless you already have one. This is stored
@@ -31,7 +31,7 @@ its value for the keys. Each message is formatted into an array [username, messa
 an array which stores all the messages. Two values in "General" channel are examples of the values stored.
 
 3) channels in application.py
-Channels is a separate dictionary that stores the list of channels created by the users and also the username
+Channels is a separate list that stores the list of channels created by the users and also the username
 of the user who created the channel. The reason why it stores the username is because this webpage also
 shows the list of channels created by the user.
 
@@ -64,12 +64,19 @@ It first checks if the user is trying to enter a channel different from the curr
 it resets the contents in message list, then iterates over for loop to append the messages to the list.
 
 3) submit message sequence
+(1) submit.addEventListener('click', function()) in index.js
+When a button with id 'submit' is clicked, this function is triggered. It first gets the new message from the
+text area and checks if the user entered the message. Then it socket.emits to application.py, with the new
+message and the user & channel info.
+(2) submit(data) in application.py
+On submit, submit function in python file is called. It gets the current time from python datetime library,
+and stores it in a special format that I have assigned. Then it checks if the current number of messages
+stored is 100 or bigger. If it is, then it removes the first item using pop() function. Then it stores the
+new inputs in an array format, in a channel_list dictionary.
+(3) showMsg(list, chn)
+The response from python is then passed into showMsg function in JS to perform appropriate function.
 
 #5 Unique feature of the webpage
 1) change settings
 Users can change message font colour, text box colour and message font-family by choosing one of the options.
 This has been implemented with javascript, using document.querySelector('#').onchange = () => {} function.
-
-2) show the list of channels created by the user
-The webpage shows the list of channels created by yourself. This is possible because when creating the
-channel, the webpage also stores the display name of the user who created the channel.

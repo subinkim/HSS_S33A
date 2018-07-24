@@ -16,7 +16,7 @@ channel_list = {
 }
 
 ## list of channels
-channels = {"General": ""}
+channels = ["General"]
 
 ##Index
 @app.route("/")
@@ -27,7 +27,7 @@ def index():
 ## Loading the list of channels
 @socketio.on("channel")
 def channel():
-    emit("done", list(channels.keys()), broadcast=True)
+    emit("done", channels, broadcast=True)
 
 ## Creating a new channel and adding it to the channel_list
 @socketio.on("create")
@@ -35,12 +35,13 @@ def create(data):
     channelName = data["name"]
     displayName = data["user"]
     channelName = channelName.title()
-    if (check(channelName, list(channels.keys())) == False):
+    ## Check if the channel already exists
+    if (check(channelName, channels)) == False):
         emit("created", ["false"], broadcast=True)
     else:
-        channels[channelName] = displayName
+        channels.append(channelName)
         channel_list[channelName] = []
-        emit("created", list(channels.keys()), broadcast=True)
+        emit("created", channels, broadcast=True)
 
 ##Check function - checks if the item already exists in the list
 def check(newItem, list):
@@ -60,9 +61,11 @@ def getMessages(data):
 ## Adding new messages to storage
 @socketio.on('submit message')
 def submit(data):
+    ##extracting necessary values from data
     msg = data["msg"]
     displayname = data["displayname"]
     channel = data["channel"]
+    ##getting current time in month/day/year hour:minute format
     time = datetime.datetime.today().strftime('%m/%d/%Y %H:%M')
     ## If number of stored messages is 100, then it deletes the first item to store the new item
     if len(channel_list[channel]) >= 100:

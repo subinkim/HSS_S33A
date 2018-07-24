@@ -31,7 +31,6 @@
         <script>
             const channel_template = Handlebars.compile(document.querySelector('#channel').innerHTML);
             const message_template = Handlebars.compile(document.querySelector('#message').innerHTML);
-
             //Displays the list of channels on webpage
             function addList(list){
                 for (var i = 0; i < list.length; i++) {
@@ -39,7 +38,6 @@
                     document.querySelector('.list-group').innerHTML += item;
                 }
             }
-
             //Displays the message of the selected channel
             function showMsg(list, chn){
                 //Check if channel is new or not
@@ -70,10 +68,6 @@
             <h4>Your info</h4>
             <p>Username:</p>
             <p id = "username"></p>
-            <!-- ADDITIONAL FEATURE:
-            display names of the channels the user created
-            <p>Channels you have created:
-            <p id = "created"></p> -->
         </div>
 
         <!-- list of channels created by all the users-->
