@@ -1,0 +1,33 @@
+html{
+    margin-left: 5%;
+    margin-right: 5%;
+}
+.container{
+    width: 25%;
+    float: left;
+    margin-bottom: 20px;
+}
+.list-group{
+    height: 10%;
+    overflow: scroll;
+}
+.list-item{
+    color: lightblue;
+    text-decoration: underline;
+}
+.msg{
+    margin-top: 10px;
+    width: 60%;
+    background-color: #87CEFA;
+    color: black;
+    font-family: 'Helvetica Neue', sans-serif;
+    border-radius: 25px;
+    padding-left: 25px;
+}
+.send {
+    width: 60%;
+    margin-top: 10px;
+}
+.messages{
+    padding-top: 10px;
+}

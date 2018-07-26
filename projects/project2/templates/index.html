@@ -1,9 +1,146 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <meta charset="utf-8">
 
+        <!-- stylesheet -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css" integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B" crossorigin="anonymous">
+        <link href="https://fonts.googleapis.com/css?family=Playfair+Display|Raleway|Gaegu|Roboto+Slab|Slabo+27px" rel="stylesheet">
+        <link rel="stylesheet" href="static/main.css">
+
+        <!-- JavaScript scripts -->
+        <script src="{{ url_for('static', filename='index.js') }}"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.11/handlebars.min.js"></script>
+        <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
+
+        <!-- Layout of this template tags is deliberately done in this way -->
+        <script id = "channel" type="text/x-handlebars-template">
+            <li class = "list-item" onclick="loadMessage(this.innerHTML)">{% raw -%}{{ contents }}{%- endraw %}</li>
+        </script>
+
+        <script id = "message" type="text/x-handlebars-template">
+            <div class = "msg">
+                {% raw -%}
+                    <strong> User "{{ username }}" said:</strong><br>
+                    {{ contents }}
+                {%- endraw %}
+            </div>
+        </script>
+
+        <!-- JavaScript script that uses Handlebars templates -->
+        <script>
+            const channel_template = Handlebars.compile(document.querySelector('#channel').innerHTML);
+            const message_template = Handlebars.compile(document.querySelector('#message').innerHTML);
+            //Displays the list of channels on webpage
+            function addList(list){
+                for (var i = 0; i < list.length; i++) {
+                    const item = channel_template({'contents': list[i]});
+                    document.querySelector('.list-group').innerHTML += item;
+                }
+            }
+            //Displays the message of the selected channel
+            function showMsg(list, chn){
+                //Check if channel is new or not
+                if (chn !== localStorage.getItem("lastChannel")){
+                    document.querySelector('.message_list').innerHTML = "";
+                }
+                //Add messages to the message list
+                for (var i = 0; i < list.length; i++) {
+                    const username = list[i][0];
+                    const message = list[i][1];
+                    const timestamp = list[i][2];
+                    msg = message + ", @ " + timestamp;
+                    const item = message_template({'username': username, 'contents': message});
+                    document.querySelector('.message_list').innerHTML += item;
+                }
+            }
+        </script>
+
+        <title><!-- Displays the channel you are in --></title>
     </head>
     <body>
+        <div class = "jumbotron">
+            <h1 class = "display-2">Quick Chat</h1>
+        </div>
 
+        <!-- display user info -->
+        <div class = "container" id = "info">
+            <h4>Your info</h4>
+            <p>Username:</p>
+            <p id = "username"></p>
+        </div>
+
+        <!-- list of channels created by all the users-->
+        <div class = "container">
+            <h4>Join other channels</h4>
+            <ul class="list-group">
+                <!-- Channel names displayed -->
+            </ul>
+        </div>
+
+        <!-- create channel -->
+        <div class = "container">
+            <h4>Create a channel</h4>
+            <form>
+                <div class = "form-group">
+                    <label for="name">Channel Name:</label>
+                    <input class="form-control" id = "name" autocomplete="off" placeholder="Channel Name" type="text" />
+                </div>
+                <div class = "form-group" id = "create">
+                    <button class="btn btn-primary">Create Channel</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- user settings -->
+        <div class = "container">
+            <h4>User settings</h4>
+            <p>Change message font colour</p>
+            <select id = "change-colour">
+                <option value = "black" selected>Black</option>
+                <option value = "white">White</option>
+                <option value = "#A51C30">Harvard Crimson</option>
+                <option value = "blue">Blue</option>
+                <option value = "green">Green</option>
+                <option value = "red">Red</option>
+            </select>
+
+            <p>Change text box colour</p>
+            <select id = "change-bg-colour">
+                <option value = "black">Black</option>
+                <option value = "white">White</option>
+                <option value = "#A51C30">Harvard Crimson</option>
+                <option value = "#87CEFA" selected>Blue</option>
+                <option value = "green">Green</option>
+                <option value = "red">Red</option>
+            </select>
+
+            <p> Change message font family</p>
+            <select id = "change-font-family">
+                <option value = "Helvetica Neue" selected>Helvetica Neue</option>
+                <option value = "Gaegu">Gaegu</option>
+                <option value = "Playfair Display">Playfair Display</option>
+                <option value = "Roboto Slab">Roboto Slab</option>
+                <option value = "Raleway">Raleway</option>
+                <option value = "Slabo 27px">Slabo 27px</option>
+            </select>
+        </div>
+
+        <!-- display messages in the selected channel -->
+        <div class = "messages">
+            <h4 id = "channel_info">Current channel: </h4>
+            <div class = "message_list">
+            </div>
+        </div>
+
+        <!-- send messages -->
+        <form class = "send">
+            <div class = "form-group">
+                <textarea class = "form-control" id = "newMsg" autocomplete="off" placeholder="Enter new message" type="text"></textarea>
+            </div>
+            <div class="form-group">
+                <button class = "btn btn-primary float-right" id = "submit">Send</button>
+            </div>
+        </form>
     </body>
 </html>
