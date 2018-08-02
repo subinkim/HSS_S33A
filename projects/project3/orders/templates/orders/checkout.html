@@ -1,0 +1,70 @@
+{% extends "orders/layout.html" %}
+
+{% block title %}
+Check out your order
+{% endblock %}
+
+{% block body %}
+<div class = "jumbotron">
+    <h1 class = "display-2">Your orders</h1>
+    <h3>Hello, {{user.first_name}}</h3>
+    <a href="{% url 'logout' %}" method="get">Logout</a>
+</div>
+{{message}}
+<br>
+<h2>Your shopping cart</h2>
+<!--displays the list of orders that have not been checked out -->
+{% for order in orders %}
+    {% if order.ordered == False %}
+    <p><strong>Order: {{order.menu}} {{order.food}}</strong></p>
+    <ul>
+        <li>Size: {{order.size}}</li>
+        <li>Price: ${{order.price}}</li>
+        <li>Toppings: {{ order.topping1|default_if_none:"" }}, {{ order.topping2|default_if_none:"" }}, {{ order.topping3|default_if_none:"" }}</li>
+    </ul>
+    {% endif %}
+{% endfor %}
+
+<!-- proceed to checkout -->
+<br><br>
+<p>Confirm your order and proceed to checkout</p>
+<p>TOTAL: ${{total}}</p><br>
+<button class="btn btn-primary" onclick="location.href='{% url 'checkout' %}'">Check out</button>
+<br> <br>
+
+
+<div>
+<!-- displays the list of pending orders -->
+<h2>Your Past Orders</h2>
+<h4>Pending</h4>
+{% for order in orders %}
+    {% if order.processed == False %}
+    <ul>
+        <li>Order: {{order.food}} {{order.menu}}</li>
+        <li>Size: {{order.size}}</li>
+        <li>Price: ${{order.price}}</li>
+        <li>Toppings: {{ order.topping1|default_if_none:"" }}, {{ order.topping2|default_if_none:"" }}, {{ order.topping3|default_if_none:"" }}</li>
+    </ul>
+    {% endif %}
+{% endfor %}
+<br><br>
+<!-- displays the list of completed orders -->
+<h4>Completed</h4>
+{% for order in orders %}
+    {% if order.processed == True %}
+    <ul>
+        <li>Order: {{order.food}} {{order.menu}}</li>
+        <li>Size: {{order.size}}</li>
+        <li>Price: ${{order.price}}</li>
+        <li>Toppings: {{ order.topping1|default_if_none:"" }}, {{ order.topping2|default_if_none:"" }}, {{ order.topping3|default_if_none:"" }}</li>
+    </ul>
+    {% endif %}
+{% endfor %}
+</div>
+
+<div>
+    {% if request.user.is_staff %}
+    <a href="{% url 'manage' %}" method="get">Manage orders</a>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,73 @@
+{% extends "orders/layout.html" %}
+
+{% block title %}
+Pinnochio's Pizza & Subs
+{% endblock %}
+
+{% block head %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.top1').onchange = function(){
+            document.querySelector('#topping1').value = this.value;
+        };
+        document.querySelectorAll('.top2').onchange = function(){
+            document.querySelector('#topping2').value = this.value;
+        };
+        document.querySelectorAll('.top3').onchange = function(){
+            document.querySelector('#topping3').value = this.value;
+        };
+    });
+
+</script>
+
+{% endblock %}
+
+{% block body %}
+
+    <div class = "jumbotron">
+        <h1 class = "display-2">Menu</h1>
+        <h3>Hello, {{user.first_name}}</h3>
+        {{message}}<br>
+        <a href="{% url 'shoppingCart' %}" method="get">Checkout</a><br>
+        <a href="{% url 'logout' %}" method="get">Logout</a>
+    </div>
+
+
+        {% csrf_token %}
+        <table class = "table">
+            <tr>
+                <th>ID</th>
+                <th>Category</th> <!-- e.g. Pizza, subs -->
+                <th>Menu</th> <!-- Name of the menu -->
+                <th>Size</th> <!-- Large or Small / None if no size options -->
+                <th>Price</th>
+                <th>Add to Cart</th> <!-- Add to cart button -->
+            </tr>
+            {% for order in orders%}
+            <tr>
+                <th id="id"> {{order.id}}</th>
+                <th id="food">{{order.food.category}}</th> <!-- category -->
+                <td id="menu">{{order.menu}}</td> <!-- menu -->
+                <td id="size">{{order.size}}</td> <!-- size -->
+                <td id="price">${{order.price}}</td> <!-- price -->
+                </td>
+
+                <!-- form receiving the data from fields and passing them to views.py -->
+                <form action="{% url 'shoppingCart' %}" method="post">
+                    {% csrf_token %}
+                    <td>
+                        <input type="hidden" value = "{{order.food.category}}" name="category">
+                        <input type="hidden" value = "{{order.menu}}" name="menu">
+                        <input type="hidden" value = "{{order.size}}" name="size">
+                        <input type="hidden" value = "{{order.price}}" name="price">
+                        <input type="hidden" id="topping1" name="topping1" value="">
+                        <input type="hidden" id="topping2" name="topping2" value="">
+                        <input type="hidden" id="topping3" name="topping3" value="">
+                        <input type="submit" value="Add to Cart">
+                    </td>
+                </form>
+            </tr>
+            {% endfor %}
+        </table>
+
+{% endblock %}

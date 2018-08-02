@@ -1,0 +1,37 @@
+{% extends "orders/layout.html" %}
+
+{% block title %}
+Register
+{% endblock %}
+
+{% block body %}
+<div class = "jumbotron">
+    <h1 class = "display-2">Register</h1>
+</div>
+
+{% if message %}
+    <div>
+        {{ message }}
+    </div>
+{% endif %}
+<form action="{% url 'register' %}" method="post">
+    {% csrf_token %}
+    <label for="first">First name: </label>
+    <input name="firstname" type="text" id="first"/><br>
+
+    <label for="last">Last name: </label>
+    <input name="lastname" type="text" id="last"/><br>
+
+    <label for="user">Username: </label>
+    <input name="username" type="text" id="user"/><br>
+
+    <label for="pass">Password: </label>
+    <input name="password" type="password" id="pass"/><br>
+
+    <label for="email">Email: </label>
+    <input name="email" type="email" id="email"/><br>
+
+    <button type="submit" value="Register" class="btn btn-outline-secondary mb-2">Register</button><br>
+</form>
+<a href="orders/login.html">Login!</a>
+{% endblock %}

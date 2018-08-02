@@ -1,0 +1,42 @@
+{% extends "orders/layout.html" %}
+
+{% block title %}
+Manage all the orders
+{% endblock %}
+
+{% block body %}
+<div class = "jumbotron">
+    <h1 class = "display-2">Manage orders</h1>
+    <h3>Hello, {{user.first_name}}</h3>
+    <a href="{% url 'logout' %}" method="get">Logout</a>
+</div>
+{{message}}
+
+<!--displays the list of orders that have not been checked out -->
+
+{% for order in orders %}
+    {% if order.ordered == True %}
+    <p><strong>Order: {{order.menu}} {{order.food}}</strong></p>
+
+
+    <ul>
+        <li>ID: {{order.id}}</li>
+        <li>Username: {{order.username}}</li>
+        <li>Size: {{order.size}}</li>
+        <li>Price: ${{order.price}}</li>
+        {% if order.topping1 != None %}
+        <li>Toppings: {{order.topping1}} {{order.topping2}} {{order.topping3}}</li>
+        {% endif %}
+        <li>Processed: {{order.processed}}</li>
+        {% if order.processed == False %}
+        {% endif %}
+    </ul>
+    {% endif %}
+{% endfor %}
+<p>Type the order id to mark processed</p>
+<form action="{% url 'manage' %}" method="post">
+    {% csrf_token %}
+    <input type="text" name="order_id">
+    <input type="submit">
+</form>
+{% endblock %}

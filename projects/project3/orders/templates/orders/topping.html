@@ -1,0 +1,61 @@
+{% extends "orders/layout.html" %}
+{% block title %}Testing{% endblock %}
+{% block head %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelector('.top1').onchange = function () {
+            document.querySelector('#topping1').value = this.value;
+        };
+        var element = document.querySelector('.top2');
+        if (element != null) {
+            document.querySelector('.top2').onchange = function () {
+                document.querySelector('#topping2').value = this.value;
+            };
+        }
+
+        element = document.querySelector('.top3');
+        if (element != null) {
+            document.querySelector('.top3').onchange = function () {
+                document.querySelector('#topping3').value = this.value;
+            };
+        }
+    });
+</script>
+{% endblock %}
+{% block body %}
+    <div class = "jumbotron">
+        <h1 class = "display-2">Choose your toppings</h1>
+        <h3>Hello, {{user.first_name}}</h3>
+    </div>
+
+    <select class="top1">
+    {% for topping in toppings %}
+        <option value="{{ topping }}">{{ topping }}</option>
+    {% endfor %}
+    </select>
+
+    {% if order.food.code == 3 or order.food.code == 4 %}
+    <select class="top2">
+    {% for topping in toppings %}
+        <option value="{{ topping }}">{{ topping }}</option>
+    {% endfor %}
+    </select>
+    {% endif %}
+
+    {% if order.food.code == 4 %}
+    <select class="top3">
+    {% for topping in toppings %}
+        <option value="{{ topping }}">{{ topping }}</option>
+    {% endfor %}
+    </select>
+    {% endif %}
+
+    <form action="{% url 'addTopping' %}" method="post">
+        {% csrf_token %}
+        <input type="hidden" id="topping1" value="" name="topping1">
+        <input type="hidden" id="topping1" value="" name="topping2">
+        <input type="hidden" id="topping1" value="" name="topping3">
+        <input type="hidden" value="{{new.id}}" name="order_id">
+        <input type="submit" id="submit" value="Submit">
+    </form>
+{% endblock %}

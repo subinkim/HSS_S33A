@@ -1,0 +1,23 @@
+{% extends "orders/layout.html" %}
+
+{% block title %}
+Login
+{% endblock %}
+
+{% block body %}
+<div class = "jumbotron">
+    <h1 class = "display-2">Login</h1>
+</div>
+{% if message %}
+    <div>
+        {{ message }}
+    </div>
+{% endif %}
+<form action="{% url 'login' %}" method="post">
+    {% csrf_token %}
+    <input name="username" type="text"/>
+    <input name="password" type="password"/>
+    <button type="submit" value="Login" class="btn btn-outline-secondary">Submit</button>
+</form>
+<a href="{% url 'register' %}" method="get">Register!</a>
+{% endblock %}
