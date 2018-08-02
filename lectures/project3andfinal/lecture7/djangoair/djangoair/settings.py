@@ -25,13 +25,12 @@ SECRET_KEY = '+3j*)0w^8m6a0yba4%d+ggg=&^-5ra6l25ruc!@_=z=1mkswf0'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = []
 
 
 # Application definition
 
 INSTALLED_APPS = [
-    'flights.apps.FlightsConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
