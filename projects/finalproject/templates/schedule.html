@@ -1,0 +1,70 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Your New England
+{% endblock %}
+
+{% block script %}
+<style>
+    @media (min-width: 768px)
+    {
+        h1::after
+        {
+            content: "Trip schedules";
+        }
+    }
+
+    @media (max-width: 767px)
+    {
+        h1::after
+        {
+            content: "Schedules";
+        }
+    }
+</style>
+{% endblock %}
+
+{% block head %}
+    {% if login %}
+        <a href = "{{url_for('log_out')}}">Log out</a>
+        &#160;&#160;<a href="{{ url_for('mypage') }}" method="get">My Page</a>
+    {% else %}
+        <a href = "{{url_for('login')}}" method="get">Log in</a>
+    {% endif %}
+    &#160;&#160;<a href="{{ url_for('cities') }}" method="get">Search Cities</a>
+    &#160;&#160;<a href="{{ url_for('schedules') }}" method="get">Search Trip Schedules</a>
+{% endblock %}
+
+{% block body %}
+<div class="jumbotron">
+    <h1 class="display-3"></h1>
+    <h4>{{ message }}</h4>
+</div>
+
+<form action="{{ url_for('schedule') }}" method="post" id="scheduleForm">
+
+    <div class="form-group">
+        <p>Check all the cities you have visited in this trip.</p>
+        <input type="checkbox" name="cb1" value="boston">Boston&#160;&#160;
+        <input type="checkbox" name="cb2" value="bridgeport">Bridgeport&#160;&#160;
+        <input type="checkbox" name="cb3" value="cambridge">Cambridge&#160;&#160;
+        <input type="checkbox" name="cb4" value="hartford">Hartford<br>
+        <input type="checkbox" name="cb5" value="lowell">Lowell&#160;&#160;
+        <input type="checkbox" name="cb6" value="manchester">Manchester&#160;&#160;
+        <input type="checkbox" name="cb7" value="new haven">New Haven&#160;&#160;
+        <input type="checkbox" name="cb8" value="providence">Providence<br>
+        <input type="checkbox" name="cb9" value="springfield">Springfield&#160;&#160;
+        <input type="checkbox" name="cb10" value="stamford">Stamford&#160;&#160;
+        <input type="checkbox" name="cb11" value="waterbury">Waterbury&#160;&#160;
+        <input type="checkbox" name="cb12" value="worcester">Worcester</input>
+    </div>
+    <div class="form-group">
+        <textarea class="form-control" rows="20" name="description" placeholder="Enter your trip description."></textarea>
+    </div>
+    <div class="form-group">
+        <button class="btn btn-primary">Submit</button>
+    </div>
+</form>
+
+
+{% endblock %}

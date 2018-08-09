@@ -1,0 +1,80 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Your New England
+{% endblock %}
+
+{% block script %}
+
+<style>
+    @media (min-width: 768px)
+    {
+        h1::after
+        {
+            content: "Your New England";
+        }
+    }
+
+    @media (max-width: 767px)
+    {
+        h1::after
+        {
+            content: "Welcome:)";
+        }
+    }
+</style>
+
+{% endblock %}
+
+{% block head %}
+    {% if login %}
+        <a href = "{{url_for('log_out')}}">Log out</a>
+        &#160;&#160;<a href="{{ url_for('mypage') }}" method="get">My Page</a>
+    {% else %}
+        <a href = "{{url_for('login')}}" method="get">Log in</a>
+    {% endif %}
+    &#160;&#160;<a href="{{ url_for('cities') }}" method="get">Search Cities</a>
+    &#160;&#160;<a href="{{ url_for('schedules') }}" method="get">Search Trip Schedules</a>
+{% endblock %}
+
+{% block body %}
+    <div class="jumbotron">
+        <h1 class="display-3"></h1>
+        <h4>{{ message }}</h4>
+    </div>
+    <form action = "{{ url_for('schedules')}}" method = "post">
+        <div class = "form-group">
+            <input class="form-control" name="city" placeholder="City Name"/>
+        </div>
+        <div class = "form-group">
+            <button class = "btn btn-primary">Search</button>
+        </div>
+    </form>
+
+    <form action = "{{ url_for('schedule') }}" method="post">
+        <button class = "btn btn-outline-info btn-sm">Share your trip schedule!</button>
+    </form>
+    <br>
+
+    <!--RESULTS OF THE SEARCH-->
+    <table class="table table-striped">
+        <thead>
+            <th scope="col">ID</th>
+            <th scope="col">User</th>
+            <th scope="col">Cities</th>
+            <th scope="col">Likes</th>
+            <th scope="col">Read</th>
+        </thead>
+        <tbody>
+        {% for i in range(0, schedules|length) %}
+            <tr>
+                <th scope="row">{{schedules[i][3]}}</th>
+                <th scope="row">{{ schedules[i][0] }}</th>
+                <td>{% for x in range(0, schedules[i][1]|length) %} {{ schedules[i][1][x].title() }}&#160;&#160; {% endfor %}</td>
+                <td>{{ schedules[i][2] }}</td>
+                <td><a href="{{ url_for('read', postId = schedules[i][3]) }}" class="btn btn-outline-info" role="button">Read</a></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

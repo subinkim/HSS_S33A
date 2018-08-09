@@ -1,0 +1,87 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Your New England
+{% endblock %}
+
+{% block script %}
+<style>
+    @media (min-width: 768px)
+    {
+        h1::after
+        {
+            content: "Trip schedule #{{schedules.id}}";
+        }
+    }
+
+    @media (max-width: 767px)
+    {
+        h1::after
+        {
+            content: "Trip #{{schedules.id}}";
+        }
+    }
+</style>
+{% endblock %}
+
+{% block head %}
+    {% if login %}
+        <a href = "{{url_for('log_out')}}">Log out</a>
+        &#160;&#160;<a href="{{ url_for('mypage') }}" method="get">My Page</a>
+    {% else %}
+        <a href = "{{url_for('login')}}" method="get">Log in</a>
+    {% endif %}
+    &#160;&#160;<a href="{{ url_for('cities') }}" method="get">Search Cities</a>
+    &#160;&#160;<a href="{{ url_for('schedules') }}" method="get">Search Trip Schedules</a>
+{% endblock %}
+
+{% block body %}
+    <div class="jumbotron">
+        <h1 class="display-3"></h1>
+        <h4>{{ message }}</h4>
+    </div>
+
+    {% if login == True and liked == False and schedules.username != username%}
+    <!--Like the trip schedule-->
+    <form action="{{ url_for('like', postId = schedules.id)}}", method="post">
+        <h6>Like this!&#160;&#160;
+        <button class="btn btn-outline-primary btn-sm">Like! {{schedules.likes}}</button></h6>
+    </form>
+    {% else %}
+        <button class="btn btn-outline-primary btn-sm" disabled>Likes: {{schedules.likes}}</button>
+    {% endif %}
+    <h4><br>Shared by: {{schedules.username}} {% if schedules.username == username %} (you) {% endif %}</h4>
+    <h4><br>Cities visited: {% for i in range(0, schedules.city|length) %} {{schedules.city[i].title()}} {% endfor %}</h4>
+    <h4>Trip schedule:</h4>
+    <p>{{schedules.info}}</p><br>
+
+    <h4>Other users' comments</h4>
+    {% if schedules.comments|length > 0 %}
+        {% for i in range(0, schedules.comments|length) %}
+        <div class="comments" style="border: 1px solid darkGray;border-radius:5px;padding:5px;margin-bottom: 5px;">
+            <p><strong>{{schedules.usernames[i]}} {% if schedules.usernames[i] == username %} (you) {% endif %}</strong><small class="text-muted"> on {{schedules.times[i]}}</small></p>
+            <p>{{schedules.comments[i]}}</p>
+        </div>
+        {% endfor %}
+    {% else %}
+        <h6>No user comments yet.</h6>
+    {% endif %}
+    <br>
+
+    {% if login %}
+    <h5>Leave comment:</h5>
+    {{message}}
+    <form action = "{{ url_for('addComment', postId=schedules.id) }}", method = "post">
+        <div class="form-group">
+            <label for="comment">Comment:</label>
+            <textarea class="form-control" rows="3" name="comment"></textarea>
+            <button class="btn btn-primary">Submit</button>
+        </div>
+    </form>
+    {% else %}
+    <form action="{{ url_for('login')}}", method = "get">
+        <button class="btn btn-info">Login to leave a comment</button>
+    </form>
+    {% endif %}
+
+{% endblock %}

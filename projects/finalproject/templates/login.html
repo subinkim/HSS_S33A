@@ -1,0 +1,65 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Your New England
+{% endblock %}
+
+{% block script %}
+
+<style>
+    @media (min-width: 768px)
+    {
+        h1::after
+        {
+            content: "Your New England";
+        }
+    }
+
+    @media (max-width: 767px)
+    {
+        h1::after
+        {
+            content: "Welcome:)";
+        }
+    }
+</style>
+
+{% endblock %}
+
+{% block head %}
+    {% if login %}
+        <a href = "{{url_for('log_out')}}">Log out</a>
+        &#160;&#160;<a href="{{ url_for('mypage') }}" method="get">My Page</a>
+    {% else %}
+        <a href = "{{url_for('login')}}" method="get">Log in</a>
+    {% endif %}
+    &#160;&#160;<a href="{{ url_for('cities') }}" method="get">Search Cities</a>
+    &#160;&#160;<a href="{{ url_for('schedules') }}" method="get">Search Trip Schedules</a>
+{% endblock %}
+
+{% block body %}
+    <div class="jumbotron">
+        <h1 class="display-3"></h1>
+        <h4>{{ message }}</h4>
+    </div>
+    {% if login %}
+        <h2>Thank you for visiting us again!</h2><br>
+        <a href="{{ url_for('cities') }}" class="btn btn-info" role="button" method="get">Go to search</a>
+
+    {% else %}
+        <h2>Log in</h2>
+        <form action = "{{ url_for('login')}}" method = "post">
+            <div class = "form-group">
+                <label for="usr">Username:</label>
+                <input class="form-control" name="username" placeholder="Username" id = "usr">
+            </div>
+            <div class = "form-group">
+                <label for="pwd">Password:</label>
+                <input class="form-control" type = "password" name="password" placeholder="Password" id = "pwd">
+            </div>
+            <div class = "form-group">
+                <button class = "btn btn-primary">Login</button>
+            </div>
+        </form>
+    {% endif %}
+{% endblock %}

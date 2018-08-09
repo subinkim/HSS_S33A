@@ -1,5 +1,0 @@
-//telling which file to run to flask
-export FLASK_APP=application.py
-
-//running flask in debug mode
-export FLASK_DEBUG = 1

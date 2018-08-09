@@ -1,0 +1,276 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Your New England
+{% endblock %}
+
+{% block script %}
+<style>
+    @media (min-width: 768px)
+    {
+    }
+
+    @media (max-width: 767px)
+    {
+        .gmap_canvas > iframe{
+            height: 400px;
+            width:500px;
+        }
+        .mapouter{
+            height: 400px;
+            width: 500px;
+        }
+    }
+
+    .mapouter{
+        text-align:right;
+        height:500px;
+        width:600px;
+    }
+
+    .gmap_canvas {
+        overflow:hidden;
+        background:none!important;
+        height:500px;
+        width:600px;
+    }
+
+</style>
+{% endblock %}
+
+{% block head %}
+    {% if login %}
+        <a href = "{{url_for('log_out')}}">Log out</a>
+        &#160;&#160;<a href="{{ url_for('mypage') }}" method="get">My Page</a>
+    {% else %}
+        <a href = "{{url_for('login')}}" method="get">Log in</a>
+    {% endif %}
+    &#160;&#160;<a href="{{ url_for('cities') }}" method="get">Search Cities</a>
+    &#160;&#160;<a href="{{ url_for('schedules') }}" method="get">Search Trip Schedules</a>
+{% endblock %}
+
+{% block body %}
+    <div class="jumbotron">
+        <h1 class="display-3">{{city.city.title()}}</h1>
+        <h4>{{ message }}</h4>
+    </div>
+
+    <!--BASIC INTRODUCTION-->
+    <h2>Introducing <mark>{{city.city.title()}}, {{city.state}}!</mark></h2>
+    <blockquote class="blockquote text-right" style="color:DimGrey;">
+        <i><p class="mb-0">{{city.info}}</p></i>
+        <footer class="blockquote-footer">From <cite title="Source Title">Google</cite></footer>
+    </blockquote>
+
+    <h4>Population:</h4>
+    <h5>{{city.population}} <small class="text-muted"> based on 2010 census</small></h5>
+    <br>
+    <h4>Number of users who saved {{city.city}} to their list: </h4>
+    <p>{{comments.saves}}</p><br>
+
+    <!--CITY RATING - AVERAGE CALCULATED-->
+    <h4>City Ratings {{ratingMessage}}<small class="text-muted">Please note that ratings are very subjective.</small></h4>
+    <p><strong>Overall:</strong>
+    {% for y in range(ratings.overall) %}
+        <span class="fa fa-star checked" style="color:orange;"></span>
+    {% endfor %}
+    {% for y in range(5-ratings.overall) %}
+        <span class="fa fa-star" style="color:gray;"></span>
+    {% endfor %}
+
+    <!--Food quality rated - represented with stars-->
+    &#160;&#160;Food:
+    {% for y in range(ratings.food) %}
+        <span class="fa fa-star checked" style="color:orange;"></span>
+    {% endfor %}
+    {% for y in range(5-ratings.food) %}
+        <span class="fa fa-star" style="color:gray;"></span>
+    {% endfor %}
+
+    &#160;&#160;Safety:
+    {% for y in range(ratings.safety) %}
+        <span class="fa fa-star checked" style="color:orange;"></span>
+    {% endfor %}
+    {% for y in range(5-ratings.safety) %}
+        <span class="fa fa-star" style="color:gray;"></span>
+    {% endfor %}
+
+    &#160;&#160;Tourist attractions:
+    {% for y in range(ratings.tour) %}
+        <span class="fa fa-star checked" style="color:orange;"></span>
+    {% endfor %}
+    {% for y in range(5-ratings.tour) %}
+        <span class="fa fa-star" style="color:gray;"></span>
+    {% endfor %}
+
+    &#160;&#160;Cleanliness:
+    {% for y in range(ratings.clean) %}
+        <span class="fa fa-star checked" style="color:orange;"></span>
+    {% endfor %}
+    {% for y in range(5-ratings.clean) %}
+        <span class="fa fa-star" style="color:gray;"></span>
+    {% endfor %}
+
+    &#160;&#160;People:
+    {% for y in range(ratings.people) %}
+        <span class="fa fa-star checked" style="color:orange;"></span>
+    {% endfor %}
+    {% for y in range(5-ratings.people) %}
+        <span class="fa fa-star" style="color:gray;"></span>
+    {% endfor %}
+    </p>
+
+    <!--Google MAPS API-->
+    <h4>Location: </h4><br>
+    <div class="mapouter">
+        <div class="gmap_canvas">
+            <iframe width="600" height="500" id="gmap_canvas" src="https://maps.google.com/maps?q={{city.city}}%2C%20{{city.state}}&t=&z=13&ie=UTF8&iwloc=&output=embed" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe>
+        </div>
+    </div>
+
+    <!--List of places in the city-->
+    <br><br><h4>Places that you must go: </h4>
+    <ol>
+    {% for x in range(0,descriptions|length) %}
+        <li><strong>{{descriptions[x].attraction}}</strong></li>
+        <p>{{descriptions[x].info}}</p>
+    {% endfor %}
+    </ol>
+
+    <!--WEATHER API-->
+    <br><div class = "weather-report">
+        <h4>{{city.city.title()}} weather now: </h4>
+        <strong>{{ weather["summary"]}}</strong>
+        <ul>
+            <li>Temperature: {{weather["temperature"]}} &#8457;</li>
+            <li>Apparent Temperature: {{weather["apparentTemperature"]}} &#8457;</li>
+            <li>Dew point: {{weather["dewPoint"]}} &#8457;</li>
+            <li>Humidity: {{weather["humidity"] * 100}} %</li>
+            <li>UV Index: {{weather["uvIndex"]}}</li>
+            <li>Chance of rain: {{weather["precipProbability"] *100}} %</li>
+        </ul>
+    </div>
+
+    <br>
+    <!--USER COMMENTS-->
+    {% if comments.comments|length > 0 %}
+    <h4>Comments:</h4>
+        {% for x in range(comments.comments|length) %}
+        <div class="comment" style="border:1px solid gray; padding: 5px; border-radius: 5px;margin-bottom:5px">
+        <!--Displays '(you)' next to the username if you left the comment-->
+        <p><strong>{{comments.usernames[x]}} {% if comments.usernames[x] == username %} (you) {% endif %}</strong><small class="text-muted"> on {{comments.time[x]}}</small></p>
+
+        <p><strong>Rating  </strong> <small class="text-muted">Please note that ratings are very subjective.</small>
+
+            <!--Converting variables into integer-->
+            {% set food = comments.food[x] | int %}
+            {% set safety = comments.safety[x] | int %}
+            {% set tour = comments.tour[x] | int %}
+            {% set clean = comments.clean[x] | int %}
+            {% set people = comments.people[x] | int %}
+
+            {% set overall = (food + safety + tour + clean + people)/5 %}
+            {% set overall = overall|round|int %}
+
+            Overall:
+            {% for y in range(overall) %}
+                <span class="fa fa-star checked" style="color:orange;"></span>
+            {% endfor %}
+            {% for y in range(5-overall) %}
+                <span class="fa fa-star" style="color:gray;"></span>
+            {% endfor %}
+
+            <!--Food quality rated - represented with stars-->
+            &#160;&#160;<br>Food:
+            {% for y in range(food) %}
+                <span class="fa fa-star checked" style="color:orange;"></span>
+            {% endfor %}
+            {% for y in range(5-food) %}
+                <span class="fa fa-star" style="color:gray;"></span>
+            {% endfor %}
+
+            &#160;&#160;Safety:
+            {% for y in range(safety) %}
+                <span class="fa fa-star checked" style="color:orange;"></span>
+            {% endfor %}
+            {% for y in range(5-safety) %}
+                <span class="fa fa-star" style="color:gray;"></span>
+            {% endfor %}
+
+            &#160;&#160;Tourist attractions:
+            {% for y in range(tour) %}
+                <span class="fa fa-star checked" style="color:orange;"></span>
+            {% endfor %}
+            {% for y in range(5-tour) %}
+                <span class="fa fa-star" style="color:gray;"></span>
+            {% endfor %}
+
+            &#160;&#160;Cleanliness:
+            {% for y in range(clean) %}
+                <span class="fa fa-star checked" style="color:orange;"></span>
+            {% endfor %}
+            {% for y in range(5-clean) %}
+                <span class="fa fa-star" style="color:gray;"></span>
+            {% endfor %}
+
+            &#160;&#160;People:
+            {% for y in range(people) %}
+                <span class="fa fa-star checked" style="color:orange;"></span>
+            {% endfor %}
+            {% for y in range(5-people) %}
+                <span class="fa fa-star" style="color:gray;"></span>
+            {% endfor %}
+
+        </p>
+        <p>{{comments.comments[x]}}</p>
+        </div>
+        {% endfor %}
+    {% else %}
+    <h4>Comments:</h4>
+    <p>No comments yet.</p>
+    {% endif %}
+
+    <!--LEAVE COMMENT (ENTER COMMENT & RATINGS)-->
+    <br>
+    {% if login %}
+    <h5>Leave comment:</h5>
+    {{message}}
+    <form action = "{{ url_for('comment', city=city.city) }}", method = "post">
+        <p><strong>Rate:</strong></p>
+        <div class="form-group">
+            <label for="food">Food (Awful <strong>0 - 5</strong> Delicious):</label>
+            <input type="number" name="foodRating" min="0" max="5" id="food"/><br>
+
+            <label for="safe">Safety (Dangerous <strong>0 - 5</strong> Very safe):</label>
+            <input type="number" name="safetyRating" min="0" max="5" id="safe"/><br>
+
+            <label for="tour">Attractions (Nothing to enjoy <strong>0 - 5</strong> Lots to visit):</label>
+            <input type="number" name="tourRating" min="0" max="5" id="tour"/><br>
+
+            <label for="clean">Cleanliness (Filthy <strong>0 - 5</strong> Very clean):</label>
+            <input type="number" name="cleanRating" min="0" max="5" id="clean"/><br>
+
+            <label for="people">People (Not helpful <strong>0 - 5</strong> Very Kind):</label>
+            <input type="number" name="peopleRating" min="0" max="5" id="people"/><br>
+        </div>
+        <div class="form-group">
+            <label for="comment">Comment:</label>
+            <textarea class="form-control" rows="3" name="comment"></textarea>
+            <button class="btn btn-primary">Submit</button>
+        </div>
+    </form>
+    {% else %}
+    <form action="{{ url_for('login')}}", method = "get">
+        <button class="btn btn-info">Login to leave a comment</button>
+    </form>
+    {% endif %}
+
+    {% if saved == False and login == True %}
+    <!--Save city-->
+    <form action="{{ url_for('save', city=city.city)}}", method="post">
+        <h6>Save {{city.city}} to your list.&#160;&#160;
+        <button class="btn btn-outline-primary btn-sm">Save</button></h6>
+    </form>
+    {% endif %}
+
+{% endblock %}

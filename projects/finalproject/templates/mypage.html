@@ -1,0 +1,133 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Your New England
+{% endblock %}
+
+{% block script %}
+<script>
+    function show(i) {
+        var info = document.querySelectorAll('#description');
+        var button = document.querySelectorAll('#descripButton');
+        if (info[i].style.display === "none") {
+            info[i].style.display = "block";
+            button[i].innerHTML = 'Hide description';
+        } else {
+            info[i].style.display = "none";
+            button[i].innerHTML = 'Show description';
+        }
+    }
+</script>
+
+<style>
+    @media (min-width: 768px)
+    {
+        h1::after
+        {
+            content: "Welcome, {{username}}";
+        }
+    }
+
+    @media (max-width: 767px)
+    {
+        h1::after
+        {
+            content: "Welcome:)";
+        }
+    }
+</style>
+{% endblock %}
+
+{% block head %}
+    {% if login %}
+        <a href = "{{url_for('log_out')}}">Log out</a>
+        &#160;&#160;<a href="{{ url_for('mypage') }}" method="get">My Page</a>
+    {% else %}
+        <a href = "{{url_for('login')}}" method="get">Log in</a>
+    {% endif %}
+    &#160;&#160;<a href="{{ url_for('cities') }}" method="get">Search Cities</a>
+    &#160;&#160;<a href="{{ url_for('schedules') }}" method="get">Search Trip Schedules</a>
+{% endblock %}
+
+{% block body %}
+    <div class="jumbotron">
+        <h1 class="display-3"></h1>
+        <h4>{{ message }}</h4>
+    </div>
+
+    <h4>List of comments you have written:</h4><br>
+    {% if comments != [] %}
+        {% for comment in comments %}
+        <div class = "comment">
+            <h6>For {{comment[2].title()}}, on {{comment[1]}}</h6>
+            <p>{{comment[0]}}</p>
+            <form action="{{url_for('city', city=comment[2])}}" method="get">
+                <button class="btn btn-info btn-sm">Check your comment</button>
+            </form>
+        </div><br>
+        {% endfor %}
+    {% else %}
+        <h6> You have no comments.</h6>
+    {% endif %}
+    <br>
+    <h4>Cities that you have saved: </h4>
+    {% if saved != [] %}
+        {% for save in saved %}
+        <h6>{{save.title()}}</h6>
+        <form action="{{url_for('city', city=save)}}" method="get">
+            <button class="btn btn-info btn-sm">Check out {{save.title()}}</button>
+        </form>
+        <form action="{{url_for('unsave', city=save)}}" method="post" style="margin-top:2px;">
+            <button class="btn btn-info btn-sm">Unsave {{save.title()}}</button>
+        </form>
+        {% endfor %}
+    {% else %}
+        <h6>None</h6>
+    {% endif %}
+    <br>
+    <h4>Schedules that you have shared: </h4>
+
+    {% if trips|length > 0 %}
+        {% for i in range(0, cities|length) %}
+        <div class="visit">
+            <br><h6>Cities you have visited in your trip: </h6>
+            <p>{% for x in range (0, cities|length) %}{{cities[i][x].title()}}&#160;{% endfor %}</p>
+            <button onclick="show({{i}})" class="btn btn-outline-info btn-sm" id="descripButton">Show description</button>
+            <br><p id ="description" style="display:none;">{{trips[i][0]}}</p>
+        </div>
+        {% endfor %}
+    {% else %}
+        <h6>None</h6>
+    {% endif %}
+
+    <br>
+    <h4>List of comments you have written to schedules:</h4><br>
+    {% if schedules != [] %}
+        {% for schedule in schedules %}
+        <div class = "comment">
+            <h6>Schedule #{{schedule[3]}}, written by {{schedule[2]}} (cities: {% for i in range(0,schedule[1]|length) %} {{schedule[1][i].title()}}, {% endfor %})</h6>
+            <p>{{schedule[0]}}</p>
+            <form action="{{url_for('read', postId=schedule[3])}}" method="get">
+                <button class="btn btn-info btn-sm">Check your comment</button>
+            </form>
+        </div><br>
+        {% endfor %}
+    {% else %}
+    <h6> You have no comments.</h6>
+    {% endif %}
+
+    <h4><br>List of schedules you have liked:</h4>
+    {% if liked != [] %}
+        {% for like in liked %}
+        <h6>{{like}}</h6>
+        <form action="{{url_for('read', postId=like)}}" method="get">
+            <button class="btn btn-info btn-sm">Check out #{{like}}</button>
+        </form>
+        <form action="{{url_for('remove', postId=like)}}" method="post" style="margin-top:2px;">
+            <button class="btn btn-info btn-sm">Unsave #{{like}}</button>
+        </form>
+        {% endfor %}
+    {% else %}
+        <h6>None</h6>
+    {% endif %}
+{% endblock %}
