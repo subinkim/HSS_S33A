@@ -1,1 +1,1 @@
-# S33A
+# Harvard Summer School S33A
