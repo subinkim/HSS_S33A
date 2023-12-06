@@ -3,8 +3,6 @@ From google travel guide
 
 # YOUR NEW ENGLAND
 
-* Sorry! I forgot to submit status report!
-
 ## I.Introduction
 
 This project aims to build a website that introduces some of the major cities in New England.
@@ -165,9 +163,3 @@ The main features of My Page include the followings:
     - city: stores the list of cities that user has visited in the trip
     - info: description about the trip
     - id: id given to schedule.
-
-## Thank you for the wonderful summer!
-Thank you for the wonderful 7 weeks that I could spend here at Harvard. This was a great learning experience for me.
-I hope that with this experience, I could reach closer to my dream of becoming a developer.
-Thank you for spending your time marking my assignments and writing comments on how to improve them, Alex. Those have been very helpful.
-Have a nice rest of the summer!
